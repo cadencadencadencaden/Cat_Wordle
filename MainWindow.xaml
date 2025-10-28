@@ -1,0 +1,14 @@
+﻿<Window x:Class="CatholicWordle.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
+        Title="Catholic Wordle" 
+        Height="750" 
+        Width="550"
+        ResizeMode="CanMinimize"
+        WindowStartupLocation="CenterScreen"
+        Background="#FF667EEA">
+    <Grid>
+        <wv2:WebView2 Name="webView" />
+    </Grid>
+</Window>
