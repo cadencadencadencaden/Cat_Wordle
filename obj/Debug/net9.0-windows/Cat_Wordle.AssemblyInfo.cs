@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Cat_Wordle")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+40e33de885da277dcdfcbd7764e19e1c0c120ec8")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+bbb023c3ee04464e6b7ce27331dda7b82b35de8f")]
 [assembly: System.Reflection.AssemblyProductAttribute("Cat_Wordle")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Cat_Wordle")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

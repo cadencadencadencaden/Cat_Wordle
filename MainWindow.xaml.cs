@@ -33,7 +33,7 @@ namespace Cat_Wordle
     <meta name=""viewport"" content=""width=device-width, initial-scale=1.0"">
     <title>Catholic Wordle</title>
     <style>
-     * {
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -41,7 +41,7 @@ namespace Cat_Wordle
 
 body {
     font-family: 'Segoe UI', Arial, sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: #e8f0fe;
     min-height: 100vh;
     display: flex;
     justify-content: center;
@@ -50,24 +50,26 @@ body {
 }
 
 .container {
-    background: white;
-    border-radius: 15px;
+    background: #ffffff;
+    border-radius: 3px;
     padding: 25px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 4px 20px rgba(30, 80, 200, 0.12);
     max-width: 600px;
     width: 100%;
     margin: 0 auto;
+    border: 1px solid #c2d4f5;
 }
 
 h1 {
-    color: #667eea;
+    color: #1a4fc4;
     text-align: center;
     margin-bottom: 20px;
     font-size: 1.8em;
+    font-weight: 600;
 }
 
 h2 {
-    color: #333;
+    color: #334e7a;
     text-align: center;
     margin-bottom: 15px;
     font-size: 1.2em;
@@ -82,26 +84,26 @@ h2 {
 }
 
 .game-option {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: #1a4fc4;
     color: white;
     padding: 15px;
     margin: 12px 0;
-    border-radius: 10px;
+    border-radius: 2px;
     cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
+    transition: background 0.2s;
     text-align: center;
     font-size: 1.1em;
     font-weight: bold;
+    border: none;
 }
 
 .game-option:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+    background: #1340a0;
 }
 
 .info {
     text-align: center;
-    color: #666;
+    color: #6b84b0;
     margin: 10px 0;
     font-size: 0.9em;
 }
@@ -124,43 +126,44 @@ h2 {
 .letter-box {
     width: 50px;
     height: 50px;
-    border: 2px solid #d3d6da;
+    border: 2px solid #c2d4f5;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 1.8em;
     font-weight: bold;
     text-transform: uppercase;
-    border-radius: 4px;
+    border-radius: 0;
     transition: all 0.4s ease;
-    background-color: white;
+    background-color: #ffffff;
+    color: #1a2e55;
     transform-style: preserve-3d;
 }
 
 .letter-box.filled {
-    border-color: #878a8c;
+    border-color: #7a9fd4;
 }
 
 .letter-box.correct {
-    background-color: #6aaa64;
-    border-color: #6aaa64;
+    background-color: #1a4fc4;
+    border-color: #1a4fc4;
     color: white;
 }
 
 .letter-box.present {
-    background-color: #c9b458;
-    border-color: #c9b458;
+    background-color: #f0a500;
+    border-color: #f0a500;
     color: white;
 }
 
 .letter-box.absent {
-    background-color: #787c7e;
-    border-color: #787c7e;
+    background-color: #757c89ff;
+    border-color: #757c89ff;
     color: white;
 }
 
 .letter-box.active-box {
-    border-color: #667eea;
+    border-color: #1a4fc4;
     border-width: 3px;
     animation: pulse 0.5s ease-in-out;
 }
@@ -182,10 +185,10 @@ h2 {
 }
 
 .key {
-    background-color: #d3d6da;
-    color: #000;
-    border: none;
-    border-radius: 4px;
+    background-color: #dce8fb;
+    color: #1a2e55;
+    border: 1px solid #c2d4f5;
+    border-radius: 0;
     padding: 14px;
     font-size: 0.9em;
     font-weight: bold;
@@ -196,7 +199,7 @@ h2 {
 }
 
 .key:hover {
-    filter: brightness(0.9);
+    background-color: #c2d4f5;
 }
 
 .key:active {
@@ -209,35 +212,38 @@ h2 {
 }
 
 .key.correct {
-    background-color: #6aaa64;
+    background-color: #1a4fc4;
     color: white;
+    border-color: #1a4fc4;
 }
 
 .key.present {
-    background-color: #c9b458;
+    background-color: #f0a500;
     color: white;
+    border-color: #f0a500;
 }
 
 .key.absent {
-    background-color: #787c7e;
+    background-color: #b0bdd4;
     color: white;
+    border-color: #b0bdd4;
 }
 
 button.action-btn {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: #1a4fc4;
     color: white;
     border: none;
     padding: 12px 24px;
     font-size: 0.95em;
-    border-radius: 8px;
+    border-radius: 2px;
     cursor: pointer;
     margin: 10px 6px;
-    transition: transform 0.2s;
+    transition: background 0.2s;
     font-weight: bold;
 }
 
 button.action-btn:hover {
-    transform: scale(1.05);
+    background: #1340a0;
 }
 
 .message {
@@ -245,18 +251,20 @@ button.action-btn:hover {
     font-size: 1.1em;
     margin: 18px 0;
     padding: 18px;
-    border-radius: 10px;
+    border-radius: 2px;
     font-weight: bold;
 }
 
 .message.success {
-    background-color: #d4edda;
-    color: #155724;
+    background-color: #e6f0ff;
+    color: #1a4fc4;
+    border: 1px solid #1a4fc4;
 }
 
 .message.failure {
-    background-color: #f8d7da;
-    color: #721c24;
+    background-color: #fff3e0;
+    color: #c47a00;
+    border: 1px solid #f0a500;
 }
 
 .answer-reveal {
@@ -264,12 +272,14 @@ button.action-btn:hover {
     font-size: 1.3em;
     margin: 18px 0;
     padding: 15px;
-    background-color: #f0f0f0;
-    border-radius: 8px;
+    background-color: #e8f0fe;
+    border-radius: 2px;
+    border: 1px solid #c2d4f5;
+    color: #1a2e55;
 }
 
 .answer-reveal span {
-    color: #667eea;
+    color: #1a4fc4;
     font-weight: bold;
 }
 
@@ -288,7 +298,6 @@ button.action-btn:hover {
     75% { transform: translateX(10px); }
 }
 
-/* FIXED: Completely redesigned word input container */
 .word-input-container {
     margin: 18px 0;
     text-align: center;
@@ -307,14 +316,16 @@ button.action-btn:hover {
 
 .word-input {
     font-size: 1.2em;
-    padding: 12px 50px 12px 15px; /* More right padding for eye icon */
-    border: 2px solid #667eea;
-    border-radius: 8px;
+    padding: 12px 50px 12px 15px;
+    border: 2px solid #c2d4f5;
+    border-radius: 2px;
     text-align: center;
-    width: 250px; /* Increased width to prevent text cutoff */
+    width: 250px;
     text-transform: uppercase;
     transition: all 0.2s;
-    height: 50px; /* Fixed height for consistent alignment */
+    height: 50px;
+    background-color: #ffffff;
+    color: #1a2e55;
 }
 
 .word-input.password {
@@ -324,11 +335,10 @@ button.action-btn:hover {
 
 .word-input:focus {
     outline: none;
-    border-color: #764ba2;
-    box-shadow: 0 0 8px rgba(102, 126, 234, 0.5);
+    border-color: #1a4fc4;
+    box-shadow: 0 0 8px rgba(26, 79, 196, 0.2);
 }
 
-/* FIXED: Perfectly centered eye icon */
 .toggle-visibility {
     position: absolute;
     right: 12px;
@@ -338,7 +348,7 @@ button.action-btn:hover {
     border: none;
     cursor: pointer;
     padding: 6px;
-    border-radius: 4px;
+    border-radius: 2px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -348,34 +358,36 @@ button.action-btn:hover {
 }
 
 .toggle-visibility:hover {
-    background-color: #f0f0f0;
+    background-color: #dce8fb;
 }
 
 .toggle-visibility svg {
     width: 20px;
     height: 20px;
-    fill: #666;
+    fill: #7a9fd4;
 }
 
 .toggle-visibility:hover svg {
-    fill: #333;
+    fill: #1a4fc4;
 }
 
 .number-input {
     font-size: 1.2em;
     padding: 12px;
-    border: 2px solid #667eea;
-    border-radius: 8px;
+    border: 2px solid #c2d4f5;
+    border-radius: 2px;
     text-align: center;
     width: 130px;
     margin: 8px;
-    height: 50px; /* Consistent height */
+    height: 50px;
+    background-color: #ffffff;
+    color: #1a2e55;
 }
 
 .number-input:focus {
     outline: none;
-    border-color: #764ba2;
-    box-shadow: 0 0 8px rgba(102, 126, 234, 0.5);
+    border-color: #1a4fc4;
+    box-shadow: 0 0 8px rgba(26, 79, 196, 0.2);
 }
 
 .suggestions {
@@ -387,22 +399,24 @@ button.action-btn:hover {
 }
 
 .suggestion {
-    background: #f0f0f0;
+    background: #dce8fb;
+    color: #1a2e55;
     padding: 10px 14px;
-    border-radius: 6px;
+    border-radius: 2px;
     cursor: pointer;
     transition: all 0.2s;
     font-weight: bold;
+    border: 1px solid #c2d4f5;
 }
 
 .suggestion:hover {
-    background: #667eea;
+    background: #1a4fc4;
     color: white;
-    transform: scale(1.05);
+    border-color: #1a4fc4;
 }
 
 .input-info {
-    color: #666;
+    color: #6b84b0;
     font-size: 0.9em;
     margin: 8px 0;
     text-align: center;
@@ -421,7 +435,7 @@ button.action-btn:hover {
 .input-label {
     display: block;
     margin-bottom: 8px;
-    color: #333;
+    color: #334e7a;
     font-weight: bold;
 }
 
@@ -441,12 +455,12 @@ button.action-btn:hover {
 .loading {
     text-align: center;
     padding: 12px;
-    color: #666;
+    color: #6b84b0;
 }
 
 .spinner {
-    border: 3px solid #f3f3f3;
-    border-top: 3px solid #667eea;
+    border: 3px solid #dce8fb;
+    border-top: 3px solid #1a4fc4;
     border-radius: 50%;
     width: 30px;
     height: 30px;
@@ -463,21 +477,22 @@ button.action-btn:hover {
     text-align: center;
     margin: 12px 0;
     padding: 10px;
-    border-radius: 5px;
+    border-radius: 2px;
     font-size: 0.9em;
 }
 
 .api-status.online {
-    background-color: #d4edda;
-    color: #155724;
+    background-color: #e6f0ff;
+    color: #1a4fc4;
+    border: 1px solid #1a4fc4;
 }
 
 .api-status.offline {
-    background-color: #f8d7da;
-    color: #721c24;
+    background-color: #fff3e0;
+    color: #c47a00;
+    border: 1px solid #f0a500;
 }
 
-/* FIXED: Generated word container alignment */
 .generated-word-container {
     margin: 18px 0;
     text-align: center;
@@ -497,21 +512,22 @@ button.action-btn:hover {
 .generated-word-display {
     font-size: 1.2em;
     padding: 12px 50px 12px 15px;
-    border: 2px solid #28a745;
-    border-radius: 8px;
+    border: 2px solid #1a4fc4;
+    border-radius: 2px;
     text-align: center;
-    width: 250px; /* Increased width */
-    background-color: #f8f9fa;
+    width: 250px;
+    background-color: #ffffff;
+    color: #1a2e55;
     margin-bottom: 8px;
     -webkit-text-security: disc;
     text-security: disc;
-    height: 50px; /* Fixed height */
+    height: 50px;
 }
 
 .generated-word-display.revealed {
     -webkit-text-security: none;
     text-security: none;
-    background-color: #e9f7ef;
+    background-color: #e6f0ff;
 }
 
 .word-actions {
@@ -523,35 +539,38 @@ button.action-btn:hover {
 }
 
 .word-action-btn {
-    background: #6c757d;
-    color: white;
-    border: none;
+    background: #dce8fb;
+    color: #1a2e55;
+    border: 1px solid #c2d4f5;
     padding: 10px 18px;
-    border-radius: 6px;
+    border-radius: 2px;
     cursor: pointer;
     transition: all 0.2s;
     font-weight: bold;
 }
 
 .word-action-btn:hover {
-    background: #5a6268;
+    background: #c2d4f5;
 }
 
 .word-action-btn.primary {
-    background: #28a745;
+    background: #1a4fc4;
+    color: white;
+    border-color: #1a4fc4;
 }
 
 .word-action-btn.primary:hover {
-    background: #218838;
+    background: #1340a0;
 }
 
 .word-action-btn.warning {
-    background: #ffc107;
-    color: #212529;
+    background: #f0a500;
+    border-color: #f0a500;
+    color: white;
 }
 
 .word-action-btn.warning:hover {
-    background: #e0a800;
+    background: #c47a00;
 }
 
 .catholic-actions, .original-actions {
@@ -562,7 +581,6 @@ button.action-btn:hover {
     flex-wrap: wrap;
 }
 
-/* Additional alignment improvements */
 #catholicConfig, #originalConfig {
     text-align: center;
     display: flex;
@@ -575,24 +593,31 @@ button.action-btn:hover {
     justify-content: center;
 }
 
-/* Center align all content in setup page */
 #setupPage {
     text-align: center;
 }
 
-/* Ensure proper text wrapping */
 .word-input::placeholder {
     text-transform: none;
     font-size: 0.95em;
-    color: #999;
+    color: #a0b4d0;
     letter-spacing: 0.5px;
 }
 
 .generated-word-display::placeholder {
     text-transform: none;
     font-size: 0.95em;
-    color: #999;
+    color: #a0b4d0;
 }
+
+.word-length-indicator {
+    color: #1a4fc4;
+    font-size: 0.9em;
+    margin-top: 4px;
+    font-weight: bold;
+    min-height: 1.2em;
+}
+
     </style>
 </head>
 <body>
@@ -662,30 +687,26 @@ button.action-btn:hover {
                 <div class=""suggestions"" id=""originalSuggestions""></div>
             </div>
 
+            <!-- UPDATED: Custom config - word length input removed, only Max Attempts + word input remain -->
             <div id=""customConfig"" class=""config-options"" style=""display: none;"">
-                <div class=""input-group"">
-                    <label class=""input-label"">Word Length</label>
-                    <input type=""number"" id=""customWordLength"" class=""number-input"" 
-                           min=""3"" max=""15"" value=""5"" onchange=""updateCustomConfig()"">
-                </div>
-                
                 <div class=""input-group"">
                     <label class=""input-label"">Max Attempts</label>
                     <input type=""number"" id=""customMaxAttempts"" class=""number-input"" 
-                           min=""1"" max=""20"" value=""6"" onchange=""updateCustomConfig()"">
+                           min=""1"" max=""20"" value=""6"">
                 </div>
                 
                 <div class=""word-input-container"">
                     <div class=""input-wrapper"">
-                        <input type=""text"" id=""customTargetWord"" class=""word-input password"" maxlength=""5"" 
-                               placeholder=""Enter 5-letter word"" oninput=""validateCustomWordInput(this)"">
+                        <input type=""text"" id=""customTargetWord"" class=""word-input password"" maxlength=""15"" 
+                               placeholder=""Type any word (3–15 letters)"" oninput=""validateCustomWordInput(this)"">
                         <button class=""toggle-visibility"" onclick=""togglePasswordVisibility('customTargetWord')"" title=""Show/hide word"">
                             <svg viewBox=""0 0 24 24"" width=""20"" height=""20"">
                                 <path d=""M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z""/>
                             </svg>
                         </button>
                     </div>
-                    <div class=""input-info"">Enter a word matching the length above</div>
+                    <div class=""input-info"">Type any word between 3 and 15 letters</div>
+                    <div class=""word-length-indicator"" id=""customWordLengthIndicator""></div>
                 </div>
             </div>
 
@@ -926,7 +947,9 @@ button.action-btn:hover {
                 case 'custom':
                     title.textContent = '⚙️ Custom Wordle Setup';
                     customConfig.style.display = 'flex';
-                    updateCustomConfig();
+                    // Reset the word input and indicator on each visit
+                    document.getElementById('customTargetWord').value = '';
+                    document.getElementById('customWordLengthIndicator').textContent = '';
                     break;
                 case 'random':
                     title.textContent = '🎲 Random Wordle Setup';
@@ -1040,14 +1063,26 @@ button.action-btn:hover {
             }
         }
 
-        function updateCustomConfig() {
-            const wordLength = parseInt(document.getElementById('customWordLength').value) || 5;
-            const targetInput = document.getElementById('customTargetWord');
-            targetInput.maxLength = wordLength;
-            targetInput.placeholder = `Enter ${wordLength}-letter word`;
-            
-            if (targetInput.value.length > wordLength) {
-                targetInput.value = targetInput.value.substring(0, wordLength);
+        function validateWordInput(input) {
+            input.value = input.value.toUpperCase().replace(/[^A-Z]/g, '');
+            if (input.value.length > 5) {
+                input.value = input.value.slice(0, 5);
+            }
+        }
+
+        // UPDATED: Custom word input validation — no fixed length, just sanitise and show live length
+        function validateCustomWordInput(input) {
+            input.value = input.value.toUpperCase().replace(/[^A-Z]/g, '');
+            const len = input.value.length;
+            const indicator = document.getElementById('customWordLengthIndicator');
+            if (len === 0) {
+                indicator.textContent = '';
+            } else if (len < 3) {
+                indicator.textContent = `${len} letter${len === 1 ? '' : 's'} — minimum is 3`;
+                indicator.style.color = '#cc8800';
+            } else {
+                indicator.textContent = `${len} letter${len === 1 ? '' : 's'}`;
+                indicator.style.color = '#00aa00';
             }
         }
 
@@ -1111,21 +1146,6 @@ button.action-btn:hover {
             startGame();
         }
 
-        function validateWordInput(input) {
-            input.value = input.value.toUpperCase().replace(/[^A-Z]/g, '');
-            if (input.value.length > 5) {
-                input.value = input.value.slice(0, 5);
-            }
-        }
-
-        function validateCustomWordInput(input) {
-            const wordLength = parseInt(document.getElementById('customWordLength').value) || 5;
-            input.value = input.value.toUpperCase().replace(/[^A-Z]/g, '');
-            if (input.value.length > wordLength) {
-                input.value = input.value.slice(0, wordLength);
-            }
-        }
-
         function startGameWithConfig() {
             let word, attempts, length;
 
@@ -1160,13 +1180,17 @@ button.action-btn:hover {
                     wordLength = 5;
                     break;
 
+                // UPDATED: Derive word length directly from the typed word
                 case 'custom':
                     word = document.getElementById('customTargetWord').value.trim().toUpperCase();
-                    length = parseInt(document.getElementById('customWordLength').value) || 5;
                     attempts = parseInt(document.getElementById('customMaxAttempts').value) || 6;
-                    
-                    if (word.length !== length) {
-                        alert(`Please enter a ${length}-letter word.`);
+
+                    if (word.length < 3) {
+                        alert('Please enter a word with at least 3 letters.');
+                        return;
+                    }
+                    if (word.length > 15) {
+                        alert('Please enter a word with no more than 15 letters.');
                         return;
                     }
                     if (!/^[A-Z]+$/.test(word)) {
@@ -1174,8 +1198,8 @@ button.action-btn:hover {
                         return;
                     }
                     targetWord = word;
+                    wordLength = word.length;   // <-- auto-detected from typed word
                     maxAttempts = attempts;
-                    wordLength = length;
                     break;
 
                 case 'random':
@@ -1321,7 +1345,7 @@ button.action-btn:hover {
     guesses.push(currentGuess);
     
     // Calculate animation duration based on word length
-    const animationDuration = wordLength * 200 + 500; // Increased timing for better visual flow
+    const animationDuration = wordLength * 200 + 500;
     
     if (currentGuess === targetWord) {
         setTimeout(() => endGame(true), animationDuration);
@@ -1374,24 +1398,21 @@ button.action-btn:hover {
     for (let i = 0; i < wordLength; i++) {
         const box = document.getElementById('box-' + currentAttempt + '-' + i);
         
-        // First, remove the filled state and add a flip animation
         setTimeout(() => {
             box.classList.remove('filled', 'active-box');
             box.style.transform = 'rotateX(90deg)';
             
-            // After flip halfway, change color and content
             setTimeout(() => {
                 box.textContent = guessLetters[i];
                 box.classList.add(result[i]);
                 box.style.transform = 'rotateX(0deg)';
                 
-                // Update keyboard after color animation
                 setTimeout(() => {
                     updateKeyboard(guessLetters[i], result[i]);
                 }, 100);
                 
             }, 150);
-        }, i * 200); // Increased delay between letters for better visibility
+        }, i * 200);
     }
 }
 
@@ -1405,9 +1426,7 @@ button.action-btn:hover {
             
             const keyElement = document.querySelector(`.key[data-key=""${letter}""]`);
     if (keyElement) {
-        // Remove all state classes
         keyElement.classList.remove('correct', 'present', 'absent');
-        // Add the new state class
         keyElement.classList.add(state);
             }
         }
