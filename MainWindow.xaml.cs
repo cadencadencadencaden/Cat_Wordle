@@ -2,7 +2,7 @@
 using System.Windows;
 using Microsoft.Web.WebView2.Core;
 
-namespace CatholicWordle
+namespace Cat_Wordle
 {
     public partial class MainWindow : Window
     {
@@ -16,10 +16,10 @@ namespace CatholicWordle
         {
             // Initialize WebView2
             await webView.EnsureCoreWebView2Async(null);
-            
+
             // Get the HTML content
             string htmlContent = GetGameHtml();
-            
+
             // Load the HTML
             webView.NavigateToString(htmlContent);
         }
@@ -33,510 +33,583 @@ namespace CatholicWordle
     <meta name=""viewport"" content=""width=device-width, initial-scale=1.0"">
     <title>Catholic Wordle</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 10px;
-        }
-
-        .container {
-            background: white;
-            border-radius: 15px;
-            padding: 20px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            max-width: 600px;
-            width: 100%;
-        }
-
-        h1 {
-            color: #667eea;
-            text-align: center;
-            margin-bottom: 15px;
-            font-size: 1.8em;
-        }
-
-        h2 {
-            color: #333;
-            text-align: center;
-            margin-bottom: 10px;
-            font-size: 1.2em;
-        }
-
-        .page {
-            display: none;
-        }
-
-        .page.active {
-            display: block;
-        }
-
-        .game-option {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 15px;
-            margin: 10px 0;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-            text-align: center;
-            font-size: 1.1em;
-            font-weight: bold;
-        }
-
-        .game-option:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
-        }
-
-        .info {
-            text-align: center;
-            color: #666;
-            margin: 8px 0;
-            font-size: 0.9em;
-        }
-
-        .game-board {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-            margin: 15px 0;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .guess-row {
-            display: flex;
-            gap: 5px;
-            justify-content: center;
-        }
-
-        .letter-box {
-            width: 50px;
-            height: 50px;
-            border: 2px solid #d3d6da;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.8em;
-            font-weight: bold;
-            text-transform: uppercase;
-            border-radius: 4px;
-            transition: all 0.3s;
-            background-color: white;
-        }
-
-        .letter-box.filled {
-            border-color: #878a8c;
-        }
-
-        .letter-box.correct {
-            background-color: #6aaa64;
-            border-color: #6aaa64;
-            color: white;
-        }
-
-        .letter-box.present {
-            background-color: #c9b458;
-            border-color: #c9b458;
-            color: white;
-        }
-
-        .letter-box.absent {
-            background-color: #787c7e;
-            border-color: #787c7e;
-            color: white;
-        }
-
-        .letter-box.active-box {
-            border-color: #667eea;
-            border-width: 3px;
-            animation: pulse 0.5s ease-in-out;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-
-        .keyboard {
-            margin-top: 15px;
-        }
-
-        .keyboard-row {
-            display: flex;
-            justify-content: center;
-            gap: 4px;
-            margin-bottom: 6px;
-        }
-
-        .key {
-            background-color: #d3d6da;
-            color: #000;
-            border: none;
-            border-radius: 4px;
-            padding: 12px;
-            font-size: 0.9em;
-            font-weight: bold;
-            cursor: pointer;
-            min-width: 30px;
-            transition: all 0.1s;
-            user-select: none;
-        }
-
-        .key:hover {
-            filter: brightness(0.9);
-        }
-
-        .key:active {
-            transform: scale(0.95);
-        }
-
-        .key.wide {
-            min-width: 55px;
-            font-size: 0.75em;
-        }
-
-        .key.correct {
-            background-color: #6aaa64;
-            color: white;
-        }
-
-        .key.present {
-            background-color: #c9b458;
-            color: white;
-        }
-
-        .key.absent {
-            background-color: #787c7e;
-            color: white;
-        }
-
-        button.action-btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            font-size: 0.95em;
-            border-radius: 8px;
-            cursor: pointer;
-            margin: 8px 4px;
-            transition: transform 0.2s;
-            font-weight: bold;
-        }
-
-        button.action-btn:hover {
-            transform: scale(1.05);
-        }
-
-        .message {
-            text-align: center;
-            font-size: 1.1em;
-            margin: 15px 0;
-            padding: 15px;
-            border-radius: 10px;
-            font-weight: bold;
-        }
-
-        .message.success {
-            background-color: #d4edda;
-            color: #155724;
-        }
-
-        .message.failure {
-            background-color: #f8d7da;
-            color: #721c24;
-        }
-
-        .answer-reveal {
-            text-align: center;
-            font-size: 1.3em;
-            margin: 15px 0;
-            padding: 12px;
-            background-color: #f0f0f0;
-            border-radius: 8px;
-        }
-
-        .answer-reveal span {
-            color: #667eea;
-            font-weight: bold;
-        }
-
-        .button-group {
-            text-align: center;
-            margin-top: 15px;
-        }
-
-        .error-shake {
-            animation: shake 0.5s;
-        }
-
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-10px); }
-            75% { transform: translateX(10px); }
-        }
-
-        .word-input-container {
-            margin: 15px 0;
-            text-align: center;
-            position: relative;
-        }
-
-        .word-input {
-            font-size: 1.2em;
-            padding: 10px 40px 10px 10px;
-            border: 2px solid #667eea;
-            border-radius: 8px;
-            text-align: center;
-            width: 200px;
-            text-transform: uppercase;
-            margin-bottom: 10px;
-        }
-
-        .word-input.password {
-            -webkit-text-security: disc;
-            text-security: disc;
-        }
-
-        .word-input:focus {
-            outline: none;
-            border-color: #764ba2;
-            box-shadow: 0 0 5px rgba(102, 126, 234, 0.5);
-        }
-
-        .toggle-visibility {
-            position: absolute;
-            right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 5px;
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .toggle-visibility:hover {
-            background-color: #f0f0f0;
-        }
-
-        .toggle-visibility svg {
-            width: 20px;
-            height: 20px;
-            fill: #666;
-        }
-
-        .toggle-visibility:hover svg {
-            fill: #333;
-        }
-
-        .number-input {
-            font-size: 1.2em;
-            padding: 10px;
-            border: 2px solid #667eea;
-            border-radius: 8px;
-            text-align: center;
-            width: 120px;
-            margin: 5px;
-        }
-
-        .number-input:focus {
-            outline: none;
-            border-color: #764ba2;
-            box-shadow: 0 0 5px rgba(102, 126, 234, 0.5);
-        }
-
-        .suggestions {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            justify-content: center;
-            margin: 15px 0;
-        }
-
-        .suggestion {
-            background: #f0f0f0;
-            padding: 8px 12px;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-weight: bold;
-        }
-
-        .suggestion:hover {
-            background: #667eea;
-            color: white;
-            transform: scale(1.05);
-        }
-
-        .input-info {
-            color: #666;
-            font-size: 0.9em;
-            margin: 5px 0;
-        }
-
-        .input-group {
-            margin: 15px 0;
-            text-align: center;
-        }
-
-        .input-label {
-            display: block;
-            margin-bottom: 5px;
-            color: #333;
-            font-weight: bold;
-        }
-
-        .config-options {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            justify-content: center;
-            margin: 20px 0;
-        }
-
-        .config-option {
-            text-align: center;
-        }
-
-        .loading {
-            text-align: center;
-            padding: 10px;
-            color: #666;
-        }
-
-        .spinner {
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid #667eea;
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 10px;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .api-status {
-            text-align: center;
-            margin: 10px 0;
-            padding: 8px;
-            border-radius: 5px;
-            font-size: 0.9em;
-        }
-
-        .api-status.online {
-            background-color: #d4edda;
-            color: #155724;
-        }
-
-        .api-status.offline {
-            background-color: #f8d7da;
-            color: #721c24;
-        }
-
-        .generated-word-container {
-            margin: 15px 0;
-            text-align: center;
-            position: relative;
-        }
-
-        .generated-word-display {
-            font-size: 1.2em;
-            padding: 10px 40px 10px 10px;
-            border: 2px solid #28a745;
-            border-radius: 8px;
-            text-align: center;
-            width: 200px;
-            background-color: #f8f9fa;
-            margin-bottom: 10px;
-            -webkit-text-security: disc;
-            text-security: disc;
-        }
-
-        .generated-word-display.revealed {
-            -webkit-text-security: none;
-            text-security: none;
-            background-color: #e9f7ef;
-        }
-
-        .word-actions {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            margin: 15px 0;
-        }
-
-        .word-action-btn {
-            background: #6c757d;
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .word-action-btn:hover {
-            background: #5a6268;
-        }
-
-        .word-action-btn.primary {
-            background: #28a745;
-        }
-
-        .word-action-btn.primary:hover {
-            background: #218838;
-        }
-
-        .word-action-btn.warning {
-            background: #ffc107;
-            color: #212529;
-        }
-
-        .word-action-btn.warning:hover {
-            background: #e0a800;
-        }
-
-        .catholic-actions, .original-actions {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            margin: 15px 0;
-        }
+     * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+}
+
+.container {
+    background: white;
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    max-width: 600px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+h1 {
+    color: #667eea;
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 1.8em;
+}
+
+h2 {
+    color: #333;
+    text-align: center;
+    margin-bottom: 15px;
+    font-size: 1.2em;
+}
+
+.page {
+    display: none;
+}
+
+.page.active {
+    display: block;
+}
+
+.game-option {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 15px;
+    margin: 12px 0;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    text-align: center;
+    font-size: 1.1em;
+    font-weight: bold;
+}
+
+.game-option:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+}
+
+.info {
+    text-align: center;
+    color: #666;
+    margin: 10px 0;
+    font-size: 0.9em;
+}
+
+.game-board {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin: 20px 0;
+    justify-content: center;
+    align-items: center;
+}
+
+.guess-row {
+    display: flex;
+    gap: 6px;
+    justify-content: center;
+}
+
+.letter-box {
+    width: 50px;
+    height: 50px;
+    border: 2px solid #d3d6da;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8em;
+    font-weight: bold;
+    text-transform: uppercase;
+    border-radius: 4px;
+    transition: all 0.4s ease;
+    background-color: white;
+    transform-style: preserve-3d;
+}
+
+.letter-box.filled {
+    border-color: #878a8c;
+}
+
+.letter-box.correct {
+    background-color: #6aaa64;
+    border-color: #6aaa64;
+    color: white;
+}
+
+.letter-box.present {
+    background-color: #c9b458;
+    border-color: #c9b458;
+    color: white;
+}
+
+.letter-box.absent {
+    background-color: #787c7e;
+    border-color: #787c7e;
+    color: white;
+}
+
+.letter-box.active-box {
+    border-color: #667eea;
+    border-width: 3px;
+    animation: pulse 0.5s ease-in-out;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+.keyboard {
+    margin-top: 20px;
+}
+
+.keyboard-row {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+    margin-bottom: 7px;
+}
+
+.key {
+    background-color: #d3d6da;
+    color: #000;
+    border: none;
+    border-radius: 4px;
+    padding: 14px;
+    font-size: 0.9em;
+    font-weight: bold;
+    cursor: pointer;
+    min-width: 32px;
+    transition: all 0.1s;
+    user-select: none;
+}
+
+.key:hover {
+    filter: brightness(0.9);
+}
+
+.key:active {
+    transform: scale(0.95);
+}
+
+.key.wide {
+    min-width: 60px;
+    font-size: 0.75em;
+}
+
+.key.correct {
+    background-color: #6aaa64;
+    color: white;
+}
+
+.key.present {
+    background-color: #c9b458;
+    color: white;
+}
+
+.key.absent {
+    background-color: #787c7e;
+    color: white;
+}
+
+button.action-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    font-size: 0.95em;
+    border-radius: 8px;
+    cursor: pointer;
+    margin: 10px 6px;
+    transition: transform 0.2s;
+    font-weight: bold;
+}
+
+button.action-btn:hover {
+    transform: scale(1.05);
+}
+
+.message {
+    text-align: center;
+    font-size: 1.1em;
+    margin: 18px 0;
+    padding: 18px;
+    border-radius: 10px;
+    font-weight: bold;
+}
+
+.message.success {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.message.failure {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.answer-reveal {
+    text-align: center;
+    font-size: 1.3em;
+    margin: 18px 0;
+    padding: 15px;
+    background-color: #f0f0f0;
+    border-radius: 8px;
+}
+
+.answer-reveal span {
+    color: #667eea;
+    font-weight: bold;
+}
+
+.button-group {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.error-shake {
+    animation: shake 0.5s;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-10px); }
+    75% { transform: translateX(10px); }
+}
+
+/* FIXED: Completely redesigned word input container */
+.word-input-container {
+    margin: 18px 0;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+.input-wrapper {
+    position: relative;
+    display: inline-block;
+    margin-bottom: 8px;
+}
+
+.word-input {
+    font-size: 1.2em;
+    padding: 12px 50px 12px 15px; /* More right padding for eye icon */
+    border: 2px solid #667eea;
+    border-radius: 8px;
+    text-align: center;
+    width: 250px; /* Increased width to prevent text cutoff */
+    text-transform: uppercase;
+    transition: all 0.2s;
+    height: 50px; /* Fixed height for consistent alignment */
+}
+
+.word-input.password {
+    -webkit-text-security: disc;
+    text-security: disc;
+}
+
+.word-input:focus {
+    outline: none;
+    border-color: #764ba2;
+    box-shadow: 0 0 8px rgba(102, 126, 234, 0.5);
+}
+
+/* FIXED: Perfectly centered eye icon */
+.toggle-visibility {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s;
+    width: 30px;
+    height: 30px;
+}
+
+.toggle-visibility:hover {
+    background-color: #f0f0f0;
+}
+
+.toggle-visibility svg {
+    width: 20px;
+    height: 20px;
+    fill: #666;
+}
+
+.toggle-visibility:hover svg {
+    fill: #333;
+}
+
+.number-input {
+    font-size: 1.2em;
+    padding: 12px;
+    border: 2px solid #667eea;
+    border-radius: 8px;
+    text-align: center;
+    width: 130px;
+    margin: 8px;
+    height: 50px; /* Consistent height */
+}
+
+.number-input:focus {
+    outline: none;
+    border-color: #764ba2;
+    box-shadow: 0 0 8px rgba(102, 126, 234, 0.5);
+}
+
+.suggestions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    margin: 18px 0;
+}
+
+.suggestion {
+    background: #f0f0f0;
+    padding: 10px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-weight: bold;
+}
+
+.suggestion:hover {
+    background: #667eea;
+    color: white;
+    transform: scale(1.05);
+}
+
+.input-info {
+    color: #666;
+    font-size: 0.9em;
+    margin: 8px 0;
+    text-align: center;
+    width: 100%;
+    line-height: 1.4;
+}
+
+.input-group {
+    margin: 18px 0;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.input-label {
+    display: block;
+    margin-bottom: 8px;
+    color: #333;
+    font-weight: bold;
+}
+
+.config-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+    justify-content: center;
+    margin: 25px 0;
+    align-items: flex-start;
+}
+
+.config-option {
+    text-align: center;
+}
+
+.loading {
+    text-align: center;
+    padding: 12px;
+    color: #666;
+}
+
+.spinner {
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #667eea;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 12px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.api-status {
+    text-align: center;
+    margin: 12px 0;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 0.9em;
+}
+
+.api-status.online {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.api-status.offline {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+/* FIXED: Generated word container alignment */
+.generated-word-container {
+    margin: 18px 0;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+.generated-word-wrapper {
+    position: relative;
+    display: inline-block;
+    margin-bottom: 8px;
+}
+
+.generated-word-display {
+    font-size: 1.2em;
+    padding: 12px 50px 12px 15px;
+    border: 2px solid #28a745;
+    border-radius: 8px;
+    text-align: center;
+    width: 250px; /* Increased width */
+    background-color: #f8f9fa;
+    margin-bottom: 8px;
+    -webkit-text-security: disc;
+    text-security: disc;
+    height: 50px; /* Fixed height */
+}
+
+.generated-word-display.revealed {
+    -webkit-text-security: none;
+    text-security: none;
+    background-color: #e9f7ef;
+}
+
+.word-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin: 18px 0;
+    flex-wrap: wrap;
+}
+
+.word-action-btn {
+    background: #6c757d;
+    color: white;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-weight: bold;
+}
+
+.word-action-btn:hover {
+    background: #5a6268;
+}
+
+.word-action-btn.primary {
+    background: #28a745;
+}
+
+.word-action-btn.primary:hover {
+    background: #218838;
+}
+
+.word-action-btn.warning {
+    background: #ffc107;
+    color: #212529;
+}
+
+.word-action-btn.warning:hover {
+    background: #e0a800;
+}
+
+.catholic-actions, .original-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin: 18px 0;
+    flex-wrap: wrap;
+}
+
+/* Additional alignment improvements */
+#catholicConfig, #originalConfig {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#customConfig, #randomConfig {
+    align-items: center;
+    justify-content: center;
+}
+
+/* Center align all content in setup page */
+#setupPage {
+    text-align: center;
+}
+
+/* Ensure proper text wrapping */
+.word-input::placeholder {
+    text-transform: none;
+    font-size: 0.95em;
+    color: #999;
+    letter-spacing: 0.5px;
+}
+
+.generated-word-display::placeholder {
+    text-transform: none;
+    font-size: 0.95em;
+    color: #999;
+}
     </style>
 </head>
 <body>
     <div class=""container"">
         <div id=""menuPage"" class=""page active"">
-            <h1>🎮 Wordle Games</h1>
+            <h1>🎮 Word Games</h1>
             <div class=""game-option"" onclick=""selectGame('catholic')"">
-                ✝️ Catholic Wordle
+                ✝️ Catholic Mode
             </div>
             <div class=""game-option"" onclick=""selectGame('original')"">
-                🎯 Original Wordle
+                🎯 Original Mode
             </div>
             <div class=""game-option"" onclick=""selectGame('custom')"">
-                ⚙️ Custom Wordle
+                ⚙️ Custom
             </div>
             <div class=""game-option"" onclick=""selectGame('random')"">
-                🎲 Random Wordle
+                🎲 Random 
             </div>
         </div>
 
@@ -546,16 +619,18 @@ namespace CatholicWordle
             <div id=""apiStatus"" class=""api-status"" style=""display: none;""></div>
             
             <div id=""catholicConfig"" class=""config-options"" style=""display: none;"">
-                <div class=""word-input-container"">
-                    <input type=""text"" id=""catholicTargetWord"" class=""word-input password"" maxlength=""5"" 
-                           placeholder=""Enter 5-letter word"" oninput=""validateWordInput(this)"">
-                    <button class=""toggle-visibility"" onclick=""togglePasswordVisibility('catholicTargetWord')"" title=""Show/hide word"">
-                        <svg viewBox=""0 0 24 24"" width=""20"" height=""20"">
-                            <path d=""M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z""/>
-                        </svg>
-                    </button>
-                    <div class=""input-info"">Enter a 5-letter Catholic word or generate a random one</div>
-                </div>
+               <div class=""word-input-container"">
+    <div class=""input-wrapper"">
+        <input type=""text"" id=""catholicTargetWord"" class=""word-input password"" maxlength=""5"" 
+               placeholder=""Enter 5-letter word"" oninput=""validateWordInput(this)"">
+        <button class=""toggle-visibility"" onclick=""togglePasswordVisibility('catholicTargetWord')"" title=""Show/hide word"">
+            <svg viewBox=""0 0 24 24"" width=""20"" height=""20"">
+                <path d=""M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z""/>
+            </svg>
+        </button>
+    </div>
+    <div class=""input-info"">Enter a 5-letter Catholic word or generate a random one</div>
+</div>
                 
                 <div class=""catholic-actions"">
                     <button class=""word-action-btn primary"" onclick=""generateCatholicWord()"">Generate Random Catholic Word</button>
@@ -567,13 +642,15 @@ namespace CatholicWordle
 
             <div id=""originalConfig"" class=""config-options"" style=""display: none;"">
                 <div class=""word-input-container"">
-                    <input type=""text"" id=""originalTargetWord"" class=""word-input password"" maxlength=""5"" 
-                           placeholder=""Enter 5-letter word"" oninput=""validateWordInput(this)"">
-                    <button class=""toggle-visibility"" onclick=""togglePasswordVisibility('originalTargetWord')"" title=""Show/hide word"">
-                        <svg viewBox=""0 0 24 24"" width=""20"" height=""20"">
-                            <path d=""M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z""/>
-                        </svg>
-                    </button>
+                    <div class=""input-wrapper"">
+                        <input type=""text"" id=""originalTargetWord"" class=""word-input password"" maxlength=""5"" 
+                               placeholder=""Enter 5-letter word"" oninput=""validateWordInput(this)"">
+                        <button class=""toggle-visibility"" onclick=""togglePasswordVisibility('originalTargetWord')"" title=""Show/hide word"">
+                            <svg viewBox=""0 0 24 24"" width=""20"" height=""20"">
+                                <path d=""M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z""/>
+                            </svg>
+                        </button>
+                    </div>
                     <div class=""input-info"">Enter a 5-letter word or generate a random general word</div>
                 </div>
                 
@@ -599,14 +676,16 @@ namespace CatholicWordle
                 </div>
                 
                 <div class=""word-input-container"">
-                    <input type=""text"" id=""customTargetWord"" class=""word-input password"" 
-                           placeholder=""Enter your word"" oninput=""validateCustomWordInput(this)"">
-                    <button class=""toggle-visibility"" onclick=""togglePasswordVisibility('customTargetWord')"" title=""Show/hide word"">
-                        <svg viewBox=""0 0 24 24"" width=""20"" height=""20"">
-                            <path d=""M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z""/>
-                        </svg>
-                    </button>
-                    <div class=""input-info"">Enter a custom word (length will be adjusted)</div>
+                    <div class=""input-wrapper"">
+                        <input type=""text"" id=""customTargetWord"" class=""word-input password"" maxlength=""5"" 
+                               placeholder=""Enter 5-letter word"" oninput=""validateCustomWordInput(this)"">
+                        <button class=""toggle-visibility"" onclick=""togglePasswordVisibility('customTargetWord')"" title=""Show/hide word"">
+                            <svg viewBox=""0 0 24 24"" width=""20"" height=""20"">
+                                <path d=""M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z""/>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class=""input-info"">Enter a word matching the length above</div>
                 </div>
             </div>
 
@@ -632,14 +711,16 @@ namespace CatholicWordle
                 
                 <div id=""generatedWordSection"" style=""display: none;"">
                     <div class=""generated-word-container"">
-                        <input type=""text"" id=""generatedWordDisplay"" class=""generated-word-display"" readonly>
-                        <button class=""toggle-visibility"" onclick=""toggleGeneratedWordVisibility()"" title=""Show/hide word"">
-                            <svg viewBox=""0 0 24 24"" width=""20"" height=""20"">
-                                <path d=""M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z""/>
-                            </svg>
-                        </button>
-                        <div class=""input-info"">Generated word (click eye to reveal)</div>
-                    </div>
+    <div class=""generated-word-wrapper"">
+        <input type=""text"" id=""generatedWordDisplay"" class=""generated-word-display"" readonly>
+        <button class=""toggle-visibility"" onclick=""toggleGeneratedWordVisibility()"" title=""Show/hide word"">
+            <svg viewBox=""0 0 24 24"" width=""20"" height=""20"">
+                <path d=""M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z""/>
+            </svg>
+        </button>
+    </div>
+    <div class=""input-info"">Generated word (click eye to reveal)</div>
+</div>
                     
                     <div class=""word-actions"">
                         <button class=""word-action-btn warning"" onclick=""generateRandomWord()"">Generate New Word</button>
@@ -718,13 +799,12 @@ namespace CatholicWordle
         // Enhanced Catholic word library (5-letter words only for Catholic mode)
         const catholicWords = [
             'FAITH', 'GRACE', 'SAINT', 'CROSS', 'ALTAR', 'ANGEL', 'BLESS', 'JESUS', 
-            'LIGHT', 'MERCY', 'PEACE', 'PRAYER', 'GLORY', 'HOLY', 'DIVINE', 'SACRED',
-            'ROSARY', 'MASS', 'HOST', 'BIBLE', 'CHURCH', 'PRIEST', 'MONK', 'NUN',
-            'SAVIOR', 'LORD', 'GOD', 'SON', 'SPIRIT', 'TRUTH', 'VIRTUE', 'SOUL',
-            'HEAVEN', 'SIN', 'DEATH', 'LIFE', 'LOVE', 'HOPE', 'JOY', 'DEAR'
-        ];
+            'LIGHT', 'MERCY', 'PEACE', 'GLORY', 'DIVINE', 'SACRED', 'ROSARY', 'BIBLE',
+            'CHURCH', 'PRIEST', 'SAVIOR', 'SPIRIT', 'TRUTH', 'VIRTUE', 'HEAVEN', 'DEATH',
+            'LIFE', 'LOVE', 'HOPE'
+        ].filter(word => word.length === 5);
 
-        // Enhanced general word library for Original Wordle (5-letter words)
+        // Enhanced general word library for Original Wordle (5-letter words only)
         const generalWords = [
             'APPLE', 'BEACH', 'CHAIR', 'DANCE', 'EARTH', 'FLAME', 'GRAPE', 'HOUSE',
             'IGLOO', 'JUICE', 'KNIFE', 'LEMON', 'MUSIC', 'NIGHT', 'OCEAN', 'PIANO',
@@ -732,13 +812,11 @@ namespace CatholicWordle
             'YACHT', 'ZEBRA', 'BRAVE', 'CLOUD', 'DREAM', 'EAGLE', 'FLOWER', 'GARDEN',
             'HAPPY', 'ISLAND', 'JUNGLE', 'KITTEN', 'LIGHT', 'MOUNTAIN', 'NATURE',
             'OCEAN', 'PENCIL', 'QUIET', 'RABBIT', 'SUNSET', 'TRAVEL', 'UNIVERSE',
-            'VICTORY', 'WONDER', 'YOUTH', 'ZEPHYR', 'BUTTERFLY', 'COMPUTER',
-            'DIAMOND', 'ELEPHANT', 'FRIENDSHIP', 'GALAXY', 'HARMONY', 'ILLUSION',
-            'JOURNEY', 'KEYBOARD', 'LANDSCAPE', 'MYSTERY', 'NOTEBOOK', 'OPPORTUNITY',
-            'BANANA', 'CASTLE', 'DONKEY', 'EAGER', 'FROST', 'GLOBE', 'HONEY', 'IVORY',
-            'JELLY', 'KOALA', 'LILAC', 'MANGO', 'NINJA', 'OLIVE', 'PUPPY', 'QUILT',
-            'ROBIN', 'SNAIL', 'TOWEL', 'ULTRA', 'VIOLA', 'WHALE', 'XEROX', 'YOGURT', 'ZESTY'
-        ];
+            'VICTORY', 'WONDER', 'YOUTH', 'ZEPHYR', 'BANANA', 'CASTLE', 'DONKEY',
+            'EAGER', 'FROST', 'GLOBE', 'HONEY', 'IVORY', 'JELLY', 'KOALA', 'LILAC',
+            'MANGO', 'NINJA', 'OLIVE', 'PUPPY', 'QUILT', 'ROBIN', 'SNAIL', 'TOWEL',
+            'ULTRA', 'VIOLA', 'WHALE', 'XEROX', 'YOGURT', 'ZESTY'
+        ].filter(word => word.length === 5);
 
         // Enhanced word library for other modes
         const wordLibrary = {
@@ -862,8 +940,13 @@ namespace CatholicWordle
             showPage('setupPage');
         }
 
-        // Generate a random Catholic word
+        // Generate a random Catholic word (only 5-letter words)
         function generateCatholicWord() {
+            if (catholicWords.length === 0) {
+                alert('No Catholic words available. Please add some 5-letter Catholic words.');
+                return;
+            }
+            
             const randomIndex = Math.floor(Math.random() * catholicWords.length);
             const randomWord = catholicWords[randomIndex];
             
@@ -875,8 +958,13 @@ namespace CatholicWordle
             input.classList.add('password');
         }
 
-        // Generate a random general word for Original Wordle
+        // Generate a random general word for Original Wordle (only 5-letter words)
         function generateOriginalWord() {
+            if (generalWords.length === 0) {
+                alert('No general words available. Please add some 5-letter words.');
+                return;
+            }
+            
             const randomIndex = Math.floor(Math.random() * generalWords.length);
             const randomWord = generalWords[randomIndex];
             
@@ -888,7 +976,7 @@ namespace CatholicWordle
             input.classList.add('password');
         }
 
-        // Generate suggestions for Catholic Wordle
+        // Generate suggestions for Catholic Wordle (only 5-letter words)
         function generateCatholicSuggestions() {
             const suggestionsContainer = document.getElementById('catholicSuggestions');
             suggestionsContainer.innerHTML = '';
@@ -910,7 +998,7 @@ namespace CatholicWordle
             document.getElementById('catholicTargetWord').value = '';
         }
 
-        // Generate suggestions for Original Wordle (using general words)
+        // Generate suggestions for Original Wordle (using general words, only 5-letter words)
         function generateOriginalSuggestions() {
             const suggestionsContainer = document.getElementById('originalSuggestions');
             suggestionsContainer.innerHTML = '';
@@ -1132,7 +1220,6 @@ namespace CatholicWordle
             updateAttemptsDisplay();
         }
 
-        // ... (keep all the existing game functions like initializeBoard, handleKeyPress, etc.) ...
         function initializeBoard() {
             const board = document.getElementById('gameBoard');
             board.innerHTML = '';
@@ -1225,24 +1312,30 @@ namespace CatholicWordle
         }
 
         function submitGuess() {
-            if (currentGuess.length !== wordLength) {
-                shakeRow(currentAttempt);
-                return;
-            }
-            
-            processGuess(currentGuess);
-            guesses.push(currentGuess);
-            
-            if (currentGuess === targetWord) {
-                setTimeout(() => endGame(true), 800);
-            } else if (currentAttempt >= maxAttempts - 1) {
-                setTimeout(() => endGame(false), 800);
-            } else {
-                currentAttempt++;
-                currentGuess = '';
-                updateAttemptsDisplay();
-            }
-        }
+    if (currentGuess.length !== wordLength) {
+        shakeRow(currentAttempt);
+        return;
+    }
+    
+    processGuess(currentGuess);
+    guesses.push(currentGuess);
+    
+    // Calculate animation duration based on word length
+    const animationDuration = wordLength * 200 + 500; // Increased timing for better visual flow
+    
+    if (currentGuess === targetWord) {
+        setTimeout(() => endGame(true), animationDuration);
+    } else if (currentAttempt >= maxAttempts - 1) {
+        setTimeout(() => endGame(false), animationDuration);
+    } else {
+        setTimeout(() => {
+            currentAttempt++;
+            currentGuess = '';
+            updateCurrentRow();
+            updateAttemptsDisplay();
+        }, animationDuration);
+    }
+}
 
         function shakeRow(rowIndex) {
             const row = document.getElementById('row-' + rowIndex);
@@ -1251,52 +1344,71 @@ namespace CatholicWordle
         }
 
         function processGuess(guess) {
-            const targetLetters = targetWord.split('');
-            const guessLetters = guess.split('');
-            const result = new Array(wordLength).fill('absent');
-            const usedTargetIndices = new Array(wordLength).fill(false);
-            
-            for (let i = 0; i < wordLength; i++) {
-                if (guessLetters[i] === targetLetters[i]) {
-                    result[i] = 'correct';
-                    usedTargetIndices[i] = true;
+    const targetLetters = targetWord.split('');
+    const guessLetters = guess.split('');
+    const result = new Array(wordLength).fill('absent');
+    const usedTargetIndices = new Array(wordLength).fill(false);
+    
+    // First pass: mark correct letters
+    for (let i = 0; i < wordLength; i++) {
+        if (guessLetters[i] === targetLetters[i]) {
+            result[i] = 'correct';
+            usedTargetIndices[i] = true;
+        }
+    }
+    
+    // Second pass: mark present letters
+    for (let i = 0; i < wordLength; i++) {
+        if (result[i] === 'absent') {
+            for (let j = 0; j < wordLength; j++) {
+                if (!usedTargetIndices[j] && guessLetters[i] === targetLetters[j]) {
+                    result[i] = 'present';
+                    usedTargetIndices[j] = true;
+                    break;
                 }
-            }
-            
-            for (let i = 0; i < wordLength; i++) {
-                if (result[i] === 'absent') {
-                    for (let j = 0; j < wordLength; j++) {
-                        if (!usedTargetIndices[j] && guessLetters[i] === targetLetters[j]) {
-                            result[i] = 'present';
-                            usedTargetIndices[j] = true;
-                            break;
-                        }
-                    }
-                }
-            }
-            
-            for (let i = 0; i < wordLength; i++) {
-                const box = document.getElementById('box-' + currentAttempt + '-' + i);
-                setTimeout(() => {
-                    box.classList.remove('active-box', 'filled');
-                    box.classList.add(result[i]);
-                    updateKeyboard(guessLetters[i], result[i]);
-                }, i * 150);
             }
         }
+    }
+    
+    // Animate each box with staggered timing
+    for (let i = 0; i < wordLength; i++) {
+        const box = document.getElementById('box-' + currentAttempt + '-' + i);
+        
+        // First, remove the filled state and add a flip animation
+        setTimeout(() => {
+            box.classList.remove('filled', 'active-box');
+            box.style.transform = 'rotateX(90deg)';
+            
+            // After flip halfway, change color and content
+            setTimeout(() => {
+                box.textContent = guessLetters[i];
+                box.classList.add(result[i]);
+                box.style.transform = 'rotateX(0deg)';
+                
+                // Update keyboard after color animation
+                setTimeout(() => {
+                    updateKeyboard(guessLetters[i], result[i]);
+                }, 100);
+                
+            }, 150);
+        }, i * 200); // Increased delay between letters for better visibility
+    }
+}
 
         function updateKeyboard(letter, state) {
             const currentState = keyboardState[letter];
             
             if (currentState === 'correct') return;
-            if (currentState === 'present' && state === 'absent') return;
+            if (currentState === 'present' && state !== 'correct') return;
             
             keyboardState[letter] = state;
             
-            const keyElement = document.querySelector('.key[data-key=""' + letter + '""]');
-            if (keyElement) {
-                keyElement.classList.remove('correct', 'present', 'absent');
-                keyElement.classList.add(state);
+            const keyElement = document.querySelector(`.key[data-key=""${letter}""]`);
+    if (keyElement) {
+        // Remove all state classes
+        keyElement.classList.remove('correct', 'present', 'absent');
+        // Add the new state class
+        keyElement.classList.add(state);
             }
         }
 
